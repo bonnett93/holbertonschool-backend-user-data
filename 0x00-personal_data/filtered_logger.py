@@ -68,7 +68,7 @@ class RedactingFormatter(logging.Formatter):
 
 
 def main() -> None:
-    """"""
+    """main function to use all above"""
     db = get_db()
     cursor = db.cursor()
     cursor.execute("SELECT * FROM users;")
