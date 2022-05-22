@@ -1,4 +1,4 @@
-#!/bin/usr/env python3
+#!/usr/bin/env python3
 """filtered_logger.py"""
 import logging
 import re
@@ -46,6 +46,9 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
                                                      database=db_name)
     return cnx
 
+
+def main() -> None:
+    """"""
 
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
