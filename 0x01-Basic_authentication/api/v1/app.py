@@ -29,7 +29,7 @@ def unauthorized_handler(error) -> str:
 
 
 @app.errorhandler(403)
-def forbidden_handler() -> str:
+def forbidden_handler(error) -> str:
     """request where the user is authenticate but
     not allowed to access to a resource
     """
