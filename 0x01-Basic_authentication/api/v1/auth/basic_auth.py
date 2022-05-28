@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """basic_auth"""
 from api.v1.auth.auth import Auth
+from base64 import b64decode
+from models.user import User
+from typing import TypeVar
 
 
 class BasicAuth(Auth):
     """BasicAuth Class"""
+
     def extract_base64_authorization_header(self,
                                             authorization_header: str) -> str:
         """returns the Base64 part of the Authorization header
@@ -38,8 +42,7 @@ class BasicAuth(Auth):
     def extract_user_credentials(self,
                                  decoded_base64_authorization_header: str
                                  ) -> (str, str):
-        """
-        Returns the user email and password from the
+        """ Returns the user email and password from the
         Base64 decoded value
         """
 
@@ -58,8 +61,7 @@ class BasicAuth(Auth):
 
     def user_object_from_credentials(self, user_email: str,
                                      user_pwd: str) -> TypeVar('User'):
-        """
-        Returns the User instance based on his
+        """ Returns the User instance based on his
         email and password
         """
         if user_email is None or not isinstance(user_email, str):
