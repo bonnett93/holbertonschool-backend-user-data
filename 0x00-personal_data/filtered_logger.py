@@ -23,7 +23,7 @@ def get_logger() -> logging.Logger:
     """Create logger"""
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
-    logger.propagate(False)
+    logger.propagate = False
     logger.basicConfig(format=RedactingFormatter.FORMAT)
 
     stream_handler = logging.StreamHandler()
