@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Views/session_auth"""
 
+from email.policy import strict
 import os
 from api.v1.views import app_views
-from flask import request, jsonify
+from flask import request, jsonify, abort
 from models.user import User
 
 
@@ -34,3 +35,16 @@ def login():
     out = jsonify(user.to_json())
     out.set_cookie(SESSION_NAME, session_id)
     return out
+
+
+@app_views.route('auth_session/logout', methods=['DELETE'],
+                 strict_slashes=False)
+def logout():
+    """ DELETE /api/v1/auth_session/logout
+    """
+    from api.v1.app import auth
+
+    destroy_session = auth.destroy_session(request)
+    if destroy_session is False:
+        abort(404)
+    return jsonify({}), 200
