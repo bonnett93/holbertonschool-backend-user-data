@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 """DB module
 """
-from pyrsistent import field
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from sqlalchemy.orm.exc import NoResultFound
@@ -19,7 +17,7 @@ class DB:
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
-        self._engine = create_engine("sqlite:///a.db", echo=True)
+        self._engine = create_engine("sqlite:///a.db", echo=False)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
@@ -33,7 +31,7 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email, hashed_password) -> User:
+    def add_user(self, email: str, hashed_password: str) -> User:
         """Create a User and save the user to the database"""
         newUser = User(email=email, hashed_password=hashed_password)
         self._session.add(newUser)
@@ -46,7 +44,7 @@ class DB:
         if not kwargs:
             raise InvalidRequestError
         fields = User.__table__.columns.keys()
-        for key in kwargs:
+        for key in kwargs.keys():
             if key not in fields:
                 raise InvalidRequestError
 
@@ -54,3 +52,19 @@ class DB:
         if user is None:
             raise NoResultFound
         return user
+
+    def update_user(self, user_id, **kwargs) -> None:
+        """use find_user_by to locate the user to update,
+        then will update the user’s attributes
+        """
+        user = self.find_user_by(id=user_id)
+        fields = User.__table__.columns.keys()
+
+        for key in kwargs.keys():
+            if key not in fields:
+                raise ValueError
+
+        for key, value in kwargs.items():
+            setattr(user, key, value)
+
+        self._session.commit()
